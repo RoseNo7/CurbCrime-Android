@@ -4,12 +4,15 @@ import android.app.Application;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.roseno.curbcrime.R;
+import com.roseno.curbcrime.service.MainService;
 
 public class NotificationProvider extends Application {
     private final String TAG = "NotificationProvider";
@@ -38,6 +41,11 @@ public class NotificationProvider extends Application {
     public static Notification createNotification(final Context context) {
         createChannel(context);
 
+        Intent intent = new Intent(context, MainService.class);
+        intent.setAction(MainService.ACTION_SERVICE_STOP);
+
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
         String title = "안전 시스템 가동";
         String content = "안전 시스템을 사용 중지하려면 탭하세요.";
 
@@ -46,6 +54,7 @@ public class NotificationProvider extends Application {
                 .setSmallIcon(R.drawable.ic_notification_alarm)
                 .setContentTitle(title)
                 .setContentText(content)
+                .setContentIntent(pendingIntent)
                 .setOngoing(true)
                 .setShowWhen(false)
                 .setAutoCancel(false);
