@@ -1,10 +1,12 @@
 package com.roseno.curbcrime.manager;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -22,6 +24,12 @@ public class PermissionsManager {
      * @return      권한 목록
      */
     private static String[] getPermissions() {
+        if (Build.VERSION.SDK_INT >= 33) {
+            return new String[]{
+                    Manifest.permission.POST_NOTIFICATIONS
+            };
+        }
+
         return new String[]{};
     }
 
