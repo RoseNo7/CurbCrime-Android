@@ -1,24 +1,32 @@
 package com.roseno.curbcrime.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.splashscreen.SplashScreen;
 
-import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.roseno.curbcrime.R;
 import com.roseno.curbcrime.manager.PermissionsManager;
-import com.roseno.curbcrime.provider.NotificationProvider;
+import com.roseno.curbcrime.manager.ServiceManager;
+import com.roseno.curbcrime.service.MainService;
 
 public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+    private final String TAG = "MainActivity";
 
     public static final int SPLASH_SCREEN_DURATION_MS = 1500;
 
+    private final Class<MainService> mainService = MainService.class;
+
     private boolean isSplashVisible = true;
+
+    private Intent alarmIntent;
+
+    TextView mGuideTextView;
 
     ToggleButton mAlarmButton;
 
@@ -36,8 +44,29 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         Handler splashDelayHandler = new Handler(getMainLooper());
         splashDelayHandler.postDelayed(new SplashDelayRunnable(), SPLASH_SCREEN_DURATION_MS);
 
+        alarmIntent = new Intent(this, mainService);
+        alarmIntent.setAction(MainService.ACTION_SERVICE_START);
+
+        mGuideTextView = findViewById(R.id.textView_activity_main_guide);
+
         mAlarmButton = findViewById(R.id.toggleButton_activity_main_alarm);
         mAlarmButton.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // 서비스 상태에 따라 버튼 상태 유지
+        boolean isRunning = ServiceManager.isRunning(this, mainService);
+
+        mAlarmButton.setOnCheckedChangeListener(null);
+        mAlarmButton.setChecked(isRunning);
+
+        mAlarmButton.setOnCheckedChangeListener(this);
+
+        String guide = isRunning? "경보기를 눌러 종료하세요" : "경보기를 눌러 실행하세요";
+        mGuideTextView.setText(guide);
     }
 
     /**
@@ -52,13 +81,21 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         if (buttonId == mAlarmButton.getId()) {
             if (isChecked) {
                 // 안전 시스템 실행
-                Notification notification = NotificationProvider.createNotification(this);
+                if (PermissionsManager.hasPermissions(this)) {
+                    startService(alarmIntent);
 
-                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(this);
-                managerCompat.notify(NotificationProvider.NOTIFICATION_ID, notification);
+                    mGuideTextView.setText("경보기를 눌러 종료하세요");
+                } else {
+                    // 권한 거부 시, 권한 요청 화면으로 이동
+                    PermissionsManager.requestPermissionsThroughSettings(this);
+
+                    mAlarmButton.setChecked(false);
+                }
             } else {
                 // 안전 시스템 종료
-                NotificationProvider.cancelNotification(this, NotificationProvider.NOTIFICATION_ID);
+                stopService(alarmIntent);
+
+                mGuideTextView.setText("경보기를 눌러 실행하세요");
             }
         }
     }
