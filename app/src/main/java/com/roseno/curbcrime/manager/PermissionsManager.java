@@ -26,11 +26,16 @@ public class PermissionsManager {
     private static String[] getPermissions() {
         if (Build.VERSION.SDK_INT >= 33) {
             return new String[]{
-                    Manifest.permission.POST_NOTIFICATIONS
+                    Manifest.permission.POST_NOTIFICATIONS,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            };
+        } else {
+            return new String[]{
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
             };
         }
-
-        return new String[]{};
     }
 
     /**
