@@ -3,21 +3,28 @@ package com.roseno.curbcrime.service;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.location.Location;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import com.roseno.curbcrime.detector.LocationDetector;
 import com.roseno.curbcrime.detector.ShakeDetector;
+import com.roseno.curbcrime.listener.LocationDetectListener;
 import com.roseno.curbcrime.listener.ShakeDetectListener;
 import com.roseno.curbcrime.provider.NotificationProvider;
+import com.roseno.curbcrime.util.LocationGeocoder;
 
-public class MainService extends Service implements ShakeDetectListener {
+import java.io.IOException;
+
+public class MainService extends Service implements ShakeDetectListener, LocationDetectListener {
     private final String TAG = "MainService";
 
     public static final String ACTION_SERVICE_START = "ACTION_SERVICE_START";
     public static final String ACTION_SERVICE_STOP = "ACTION_SERVICE_STOP";
 
     private ShakeDetector shakeDetector;
+    private LocationDetector locationDetector;
     
     @Override
     public void onCreate() {
@@ -70,6 +77,35 @@ public class MainService extends Service implements ShakeDetectListener {
      */
     @Override
     public void onDetect() {
+        locationDetector = new LocationDetector(this, this);
+        locationDetector.startDetection();
+    }
+
+    /**
+     * 위치 탐지 성공
+     * @param location      위치
+     */
+    @Override
+    public void onDetect(Location location) {
+        locationDetector.stopDetection();
+
+        double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
+
+        String address;
+
+        try {
+            address = LocationGeocoder.reverseGeocode(this, latitude, longitude);
+        } catch (IOException e) {
+            address = "주소를 찾을 수 없습니다.";
+        }
+    }
+
+    /**
+     * 위치 탐지 실패
+     */
+    @Override
+    public void onFailure() {
 
     }
 }
