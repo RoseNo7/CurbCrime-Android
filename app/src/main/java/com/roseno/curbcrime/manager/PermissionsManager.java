@@ -28,12 +28,14 @@ public class PermissionsManager {
             return new String[]{
                     Manifest.permission.POST_NOTIFICATIONS,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.SEND_SMS
             };
         } else {
             return new String[]{
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.SEND_SMS
             };
         }
     }
