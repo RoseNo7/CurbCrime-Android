@@ -15,6 +15,7 @@ import com.roseno.curbcrime.listener.ShakeDetectListener;
 import com.roseno.curbcrime.manager.AlarmManager;
 import com.roseno.curbcrime.provider.NotificationProvider;
 import com.roseno.curbcrime.util.LocationGeocoder;
+import com.roseno.curbcrime.util.MessageSender;
 
 import java.io.IOException;
 
@@ -101,12 +102,18 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
 
-        String address;
-
         try {
-            address = LocationGeocoder.reverseGeocode(this, latitude, longitude);
+            String address = LocationGeocoder.reverseGeocode(this, latitude, longitude);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("[CurbCrime] 도움 요청").append("\n");
+            sb.append(String.format("[%s]에서 위험에 처해 있습니다.", address));
+
+            String message = sb.toString();
+
+            sendLocationMessage(message);
         } catch (IOException e) {
-            address = "주소를 찾을 수 없습니다.";
+            onFailure();
         }
     }
 
@@ -115,6 +122,23 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
      */
     @Override
     public void onFailure() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[CurbCrime] 도움 요청").append("\n");
+        sb.append("지금 위험에 처해 있습니다.");
 
+        String failedMessage = sb.toString();
+
+        sendLocationMessage(failedMessage);
+    }
+
+    /**
+     * 위치 메시지 전송
+     * @param message   메세지
+     */
+    public void sendLocationMessage(String message) {
+        // TODO: 설정된 값에서 가져와야 한다.
+        String target = "";
+        
+        MessageSender.sendMessage(target, message);
     }
 }
