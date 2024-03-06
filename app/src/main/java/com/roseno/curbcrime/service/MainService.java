@@ -12,6 +12,7 @@ import com.roseno.curbcrime.detector.LocationDetector;
 import com.roseno.curbcrime.detector.ShakeDetector;
 import com.roseno.curbcrime.listener.LocationDetectListener;
 import com.roseno.curbcrime.listener.ShakeDetectListener;
+import com.roseno.curbcrime.manager.AlarmManager;
 import com.roseno.curbcrime.provider.NotificationProvider;
 import com.roseno.curbcrime.util.LocationGeocoder;
 
@@ -25,7 +26,8 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
 
     private ShakeDetector shakeDetector;
     private LocationDetector locationDetector;
-    
+    private AlarmManager alarmManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -70,6 +72,10 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
             shakeDetector.stopDetection();
             shakeDetector = null;
         }
+
+        if (alarmManager != null) {
+            alarmManager.stopAlarm();
+        }
     }
 
     /**
@@ -77,6 +83,9 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
      */
     @Override
     public void onDetect() {
+        alarmManager = new AlarmManager(this);
+        alarmManager.startAlarm();
+
         locationDetector = new LocationDetector(this, this);
         locationDetector.startDetection();
     }
