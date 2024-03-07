@@ -25,12 +25,20 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
     public static final String ACTION_SERVICE_START = "ACTION_SERVICE_START";
     public static final String ACTION_SERVICE_STOP = "ACTION_SERVICE_STOP";
 
+    private static MainService instance;
+
     private ShakeDetector shakeDetector;
     private LocationDetector locationDetector;
+
+    public static MainService getInstance() {
+        return instance;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        instance = this;
     }
 
     @Nullable
@@ -74,6 +82,16 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
         }
 
         AlarmManager.stop();
+
+        instance = null;
+    }
+
+    /**
+     * 서비스가 실행 중인 경우, 가속도 설정 값을 변경
+     * @return
+     */
+    public ShakeDetector getShakeDetector() {
+        return shakeDetector;
     }
 
     /**
