@@ -30,6 +30,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:theme="@style/Theme.CurbCrime" />
+
         <service android:name=".service.MainService" />
     </application>
 
