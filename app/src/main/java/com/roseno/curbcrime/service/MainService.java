@@ -27,7 +27,6 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
 
     private ShakeDetector shakeDetector;
     private LocationDetector locationDetector;
-    private AlarmManager alarmManager;
 
     @Override
     public void onCreate() {
@@ -74,9 +73,7 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
             shakeDetector = null;
         }
 
-        if (alarmManager != null) {
-            alarmManager.stopAlarm();
-        }
+        AlarmManager.stop();
     }
 
     /**
@@ -84,8 +81,7 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
      */
     @Override
     public void onDetect() {
-        alarmManager = new AlarmManager(this);
-        alarmManager.startAlarm();
+        AlarmManager.start(this);
 
         locationDetector = new LocationDetector(this, this);
         locationDetector.startDetection();
@@ -137,7 +133,7 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
      */
     public void sendLocationMessage(String message) {
         // TODO: 설정된 값에서 가져와야 한다.
-        String target = "01030384537";
+        String target = "";
         
         MessageSender.sendMessage(target, message);
     }

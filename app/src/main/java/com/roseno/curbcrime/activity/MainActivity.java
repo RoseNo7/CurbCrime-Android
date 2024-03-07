@@ -13,12 +13,16 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.roseno.curbcrime.R;
+import com.roseno.curbcrime.manager.AlarmManager;
 import com.roseno.curbcrime.manager.PermissionsManager;
 import com.roseno.curbcrime.manager.ServiceManager;
+import com.roseno.curbcrime.manager.SharedPreferenceManager;
 import com.roseno.curbcrime.service.MainService;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private final String TAG = "MainActivity";
+
+    public static final String PREFERENCE_KEY_FIRST_RUN = "FIRST_RUN";
 
     public static final int SPLASH_SCREEN_DURATION_MS = 1500;
 
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initOnFirst();          // 첫 실행 시, 설정 정보를 초기화
 
         Handler splashDelayHandler = new Handler(getMainLooper());
         splashDelayHandler.postDelayed(new SplashDelayRunnable(), SPLASH_SCREEN_DURATION_MS);
@@ -119,6 +125,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 mGuideTextView.setText("경보기를 눌러 실행하세요");
             }
+        }
+    }
+
+    /**
+     * 첫 실행 시, 설정 정보를 초기화
+     */
+    public void initOnFirst() {
+        SharedPreferenceManager sharedPreferenceManager = SharedPreferenceManager.getInstance(this);
+        boolean isFirstRun = sharedPreferenceManager.getBoolean(PREFERENCE_KEY_FIRST_RUN, true);
+
+        if (isFirstRun) {
+            sharedPreferenceManager.setBoolean(PREFERENCE_KEY_FIRST_RUN, false);
+            sharedPreferenceManager.setInt(AlarmManager.PREFERENCE_KEY_SELECTED_SOUND, AlarmManager.DEFAULT_SOUND);
         }
     }
 
