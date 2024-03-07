@@ -8,11 +8,33 @@
         app:iconSpaceReserved="false">
 
         <Preference
-            android:key="alarm_sound"
+            android:key="ALARM_SOUND"
             android:title="경보음"
             android:summary="경보음을 설정합니다."
             app:fragment="com.roseno.curbcrime.fragment.settings.AlarmPreferenceFragment"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="흔들기 설정"
+        android:summary="핸드폰을 흔들어 긴급 상황을 알립니다."
+        app:iconSpaceReserved="false">
+
+    <ListPreference
+        android:key="SHAKE_DETECT_COUNT"
+        android:title="흔들기 횟수"
+        android:summary="핸드폰 흔드는 횟수를 설정합니다."
+        android:entries="@array/shake_count_list_entries"
+        android:entryValues="@array/shake_count_list_values"
+        app:iconSpaceReserved="false" />
+
+    <ListPreference
+        android:key="SHAKE_DETECT_THRESHOLD_RATE"
+        android:title="흔들기 세기"
+        android:summary="핸드폰 흔드는 세기를 설정합니다."
+        android:entries="@array/shake_threshold_list_entries"
+        android:entryValues="@array/shake_threshold_list_values"
+        app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
 </PreferenceScreen>

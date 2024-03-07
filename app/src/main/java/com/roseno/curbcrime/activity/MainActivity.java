@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.roseno.curbcrime.R;
+import com.roseno.curbcrime.detector.ShakeDetector;
 import com.roseno.curbcrime.manager.AlarmManager;
 import com.roseno.curbcrime.manager.PermissionsManager;
 import com.roseno.curbcrime.manager.ServiceManager;
@@ -138,6 +139,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (isFirstRun) {
             sharedPreferenceManager.setBoolean(PREFERENCE_KEY_FIRST_RUN, false);
             sharedPreferenceManager.setInt(AlarmManager.PREFERENCE_KEY_SELECTED_SOUND, AlarmManager.DEFAULT_SOUND);
+            sharedPreferenceManager.setString(ShakeDetector.PREFERENCE_KEY_SHAKE_DETECT_COUNT, ShakeDetector.DEFAULT_SHAKE_DETECT_COUNT);
+            sharedPreferenceManager.setString(ShakeDetector.PREFERENCE_KEY_SHAKE_DETECT_THRESHOLD_RATE, ShakeDetector.DEFAULT_SHAKE_DETECT_THRESHOLD_RATE);
         }
     }
 
