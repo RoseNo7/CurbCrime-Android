@@ -7,6 +7,19 @@
     android:background="@color/navy"
     tools:context=".activity.MainActivity">
 
+    <ImageButton
+        android:id="@+id/imageButton_activity_main_settings"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/effect_setting_button_pressed"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_settings" />
+
     <ToggleButton
         android:id="@+id/toggleButton_activity_main_alarm"
         android:layout_width="wrap_content"

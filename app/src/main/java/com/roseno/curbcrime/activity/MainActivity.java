@@ -6,20 +6,27 @@ import androidx.core.splashscreen.SplashScreen;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.roseno.curbcrime.R;
+import com.roseno.curbcrime.manager.AlarmManager;
 import com.roseno.curbcrime.manager.PermissionsManager;
 import com.roseno.curbcrime.manager.ServiceManager;
+import com.roseno.curbcrime.manager.SharedPreferenceManager;
 import com.roseno.curbcrime.service.MainService;
 
-public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private final String TAG = "MainActivity";
+
+    public static final String PREFERENCE_KEY_FIRST_RUN = "FIRST_RUN";
 
     public static final int SPLASH_SCREEN_DURATION_MS = 1500;
 
+    private final Class<SettingsActivity> settingActivity = SettingsActivity.class;
     private final Class<MainService> mainService = MainService.class;
 
     private boolean isSplashVisible = true;
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     TextView mGuideTextView;
 
+    ImageButton mSettingsButton;
     ToggleButton mAlarmButton;
 
     @Override
@@ -41,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initOnFirst();          // 첫 실행 시, 설정 정보를 초기화
+
         Handler splashDelayHandler = new Handler(getMainLooper());
         splashDelayHandler.postDelayed(new SplashDelayRunnable(), SPLASH_SCREEN_DURATION_MS);
 
@@ -48,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         alarmIntent.setAction(MainService.ACTION_SERVICE_START);
 
         mGuideTextView = findViewById(R.id.textView_activity_main_guide);
+
+        mSettingsButton = findViewById(R.id.imageButton_activity_main_settings);
+        mSettingsButton.setOnClickListener(this);
 
         mAlarmButton = findViewById(R.id.toggleButton_activity_main_alarm);
         mAlarmButton.setOnCheckedChangeListener(this);
@@ -69,6 +82,21 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         mGuideTextView.setText(guide);
     }
 
+    /**
+     * 버튼 이벤트
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        int buttonId = v.getId();
+
+        if (buttonId == mSettingsButton.getId()) {
+            // 설정 화면으로 이동
+            Intent intent = new Intent(getApplicationContext(), settingActivity);
+            startActivity(intent);
+        }
+    }
+    
     /**
      * 토글 버튼 이벤트
      * @param buttonView The compound button view whose state has changed.
@@ -97,6 +125,19 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
                 mGuideTextView.setText("경보기를 눌러 실행하세요");
             }
+        }
+    }
+
+    /**
+     * 첫 실행 시, 설정 정보를 초기화
+     */
+    public void initOnFirst() {
+        SharedPreferenceManager sharedPreferenceManager = SharedPreferenceManager.getInstance(this);
+        boolean isFirstRun = sharedPreferenceManager.getBoolean(PREFERENCE_KEY_FIRST_RUN, true);
+
+        if (isFirstRun) {
+            sharedPreferenceManager.setBoolean(PREFERENCE_KEY_FIRST_RUN, false);
+            sharedPreferenceManager.setInt(AlarmManager.PREFERENCE_KEY_SELECTED_SOUND, AlarmManager.DEFAULT_SOUND);
         }
     }
 

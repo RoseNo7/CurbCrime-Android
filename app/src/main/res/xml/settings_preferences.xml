@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="경보음 설정"
+        android:summary="긴급 상황 발생 시, 경보음이 울립니다."
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="alarm_sound"
+            android:title="경보음"
+            android:summary="경보음을 설정합니다."
+            app:fragment="com.roseno.curbcrime.fragment.settings.AlarmPreferenceFragment"
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
