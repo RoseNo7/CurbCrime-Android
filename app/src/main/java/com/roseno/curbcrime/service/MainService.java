@@ -55,8 +55,8 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
         switch (action) {
             case ACTION_SERVICE_START:
                 // 서비스 시작 요청
-                Notification notification = NotificationProvider.createNotification(this);
-                startForeground(NotificationProvider.NOTIFICATION_ID, notification);
+                Notification notification = NotificationProvider.createAppNotification(this);
+                startForeground(NotificationProvider.NOTIFICATION_ID_APP, notification);
 
                 shakeDetector = new ShakeDetector(this, this);
                 shakeDetector.startDetection();
@@ -82,8 +82,6 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
             shakeDetector = null;
         }
 
-        AlarmManager.stop();
-
         instance = null;
     }
 
@@ -101,6 +99,9 @@ public class MainService extends Service implements ShakeDetectListener, Locatio
     @Override
     public void onDetect() {
         AlarmManager.start(this);
+
+        Notification notification = NotificationProvider.createAlarmNotification(this);
+        NotificationProvider.show(this, NotificationProvider.NOTIFICATION_ID_ALARM, notification);
 
         locationDetector = new LocationDetector(this, this);
         locationDetector.startDetection();
