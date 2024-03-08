@@ -71,16 +71,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
 
-        // 서비스 상태에 따라 버튼 상태 유지
-        boolean isRunning = ServiceManager.isRunning(this, mainService);
+        checkMainService();
+    }
 
-        mAlarmButton.setOnCheckedChangeListener(null);
-        mAlarmButton.setChecked(isRunning);
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
 
-        mAlarmButton.setOnCheckedChangeListener(this);
-
-        String guide = isRunning? "경보기를 눌러 종료하세요" : "경보기를 눌러 실행하세요";
-        mGuideTextView.setText(guide);
+        checkMainService();
     }
 
     /**
@@ -142,6 +140,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sharedPreferenceManager.setString(ShakeDetector.PREFERENCE_KEY_SHAKE_DETECT_COUNT, ShakeDetector.DEFAULT_SHAKE_DETECT_COUNT);
             sharedPreferenceManager.setString(ShakeDetector.PREFERENCE_KEY_SHAKE_DETECT_THRESHOLD_RATE, ShakeDetector.DEFAULT_SHAKE_DETECT_THRESHOLD_RATE);
         }
+    }
+
+    /**
+     * 서비스 상태에 따라 버튼 상태를 유지
+     */
+    public void checkMainService() {
+        boolean isRunning = ServiceManager.isRunning(this, mainService);
+
+        mAlarmButton.setOnCheckedChangeListener(null);
+        mAlarmButton.setChecked(isRunning);
+
+        mAlarmButton.setOnCheckedChangeListener(this);
+
+        String guide = isRunning? "경보기를 눌러 종료하세요" : "경보기를 눌러 실행하세요";
+        mGuideTextView.setText(guide);
     }
 
     /**
