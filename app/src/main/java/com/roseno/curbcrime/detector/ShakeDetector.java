@@ -16,7 +16,7 @@ public class ShakeDetector implements SensorEventListener {
     public static final String PREFERENCE_KEY_SHAKE_DETECT_THRESHOLD_RATE = "SHAKE_DETECT_THRESHOLD_RATE";
 
     public static final String DEFAULT_SHAKE_DETECT_THRESHOLD_RATE = "1.6";     // arrays.xml 에서 String만 지원
-    public static final String DEFAULT_SHAKE_DETECT_COUNT = "6";
+    public static final String DEFAULT_SHAKE_DETECT_COUNT = "5";
     
     private static final int SHAKE_DETECT_TIME_THRESHOLD_MS = 300;
     private static final int SHAKE_RESET_INTERVAL_MS = 3000;
