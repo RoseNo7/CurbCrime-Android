@@ -14,6 +14,8 @@ public class AlarmManager {
 
     public static final String PREFERENCE_KEY_SELECTED_SOUND = "ALARM_SOUND";
 
+    public static final String ACTION_ALARM_STOP = "ACTION_ALARM_STOP";
+
     public static final int DEFAULT_SOUND = R.raw.alarm_basic;
 
     private static MediaPlayer mediaPlayer;
