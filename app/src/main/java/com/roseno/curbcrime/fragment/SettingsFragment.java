@@ -7,11 +7,15 @@ import androidx.annotation.Nullable;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreference;
 
 import com.roseno.curbcrime.R;
 import com.roseno.curbcrime.detector.ShakeDetector;
 import com.roseno.curbcrime.manager.ServiceManager;
+import com.roseno.curbcrime.manager.SharedPreferenceManager;
+import com.roseno.curbcrime.preference.MessageTargetPreference;
 import com.roseno.curbcrime.service.MainService;
+import com.roseno.curbcrime.util.MessageSender;
 
 /**
  * /xml/settings_preferences.xml 에서 설정 목록 구성
@@ -24,6 +28,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     ListPreference mShakeCountPreference;
     ListPreference mShakeThresholdPreference;
 
+    SwitchPreference mMessageEnablePreference;
+    MessageTargetPreference mMessageTargetPreference;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +40,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
         mShakeThresholdPreference = findPreference(ShakeDetector.PREFERENCE_KEY_SHAKE_DETECT_THRESHOLD_RATE);
         mShakeThresholdPreference.setOnPreferenceChangeListener(this);
+
+        mMessageEnablePreference = findPreference(MessageSender.PREFERENCE_KEY_SEND_ENABLE);
+        mMessageEnablePreference.setOnPreferenceChangeListener(this);
+
+        mMessageTargetPreference = findPreference(MessageSender.PREFERENCE_KEY_SEND_TARGET);
+
+        SharedPreferenceManager sharedPreferenceManager = SharedPreferenceManager.getInstance(getContext());
+        boolean isEnableSendMessage = sharedPreferenceManager.getBoolean(MessageSender.PREFERENCE_KEY_SEND_ENABLE);
+
+        mMessageTargetPreference.setEnabled(isEnableSendMessage);
     }
 
     @Override
@@ -64,6 +81,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
                 shakeDetector.setShakeDetectThreshold(Float.parseFloat((String) newValue));
             }
+        } else if (mMessageEnablePreference.getKey().equals(key)) {
+            boolean isSwitchOn = (boolean) newValue;
+
+            mMessageTargetPreference.setEnabled(isSwitchOn);
         }
 
         return true;
