@@ -8,11 +8,53 @@
         app:iconSpaceReserved="false">
 
         <Preference
-            android:key="alarm_sound"
+            android:key="ALARM_SOUND"
             android:title="경보음"
             android:summary="경보음을 설정합니다."
             app:fragment="com.roseno.curbcrime.fragment.settings.AlarmPreferenceFragment"
             app:iconSpaceReserved="false" />
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="흔들기 설정"
+        android:summary="핸드폰을 흔들어 긴급 상황을 알립니다."
+        app:iconSpaceReserved="false">
+
+    <ListPreference
+        android:key="SHAKE_DETECT_COUNT"
+        android:title="흔들기 횟수"
+        android:summary="핸드폰 흔드는 횟수를 설정합니다."
+        android:entries="@array/shake_count_list_entries"
+        android:entryValues="@array/shake_count_list_values"
+        app:iconSpaceReserved="false" />
+
+    <ListPreference
+        android:key="SHAKE_DETECT_THRESHOLD_RATE"
+        android:title="흔들기 세기"
+        android:summary="핸드폰 흔드는 세기를 설정합니다."
+        android:entries="@array/shake_threshold_list_entries"
+        android:entryValues="@array/shake_threshold_list_values"
+        app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="메시지 전송 설정"
+        android:summary="긴급 상황 발생 시, 대상에게 현재 위치를 전송합니다."
+        app:iconSpaceReserved="false">
+
+        <SwitchPreference
+            android:key="MESSAGE_SEND_ENABLE"
+            android:title="메시지 전송 활성화"
+            android:defaultValue="false"
+            app:iconSpaceReserved="false" />
+
+        <com.roseno.curbcrime.preference.MessageTargetPreference
+            android:key="MESSAGE_SEND_TARGET"
+            android:title="메시지 전송 대상"
+            android:summary="메시지 전송 대상을 입력하세요."
+            android:dialogTitle="메시지 전송 대상"
+            android:dialogMessage="핸드폰 번호는 - 뺴고 숫자만 입력해주세요."
+            app:iconSpaceReserved="false" />
+    </PreferenceCategory>
 </PreferenceScreen>

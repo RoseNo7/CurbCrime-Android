@@ -5,6 +5,9 @@ import android.telephony.SmsManager;
 public class MessageSender {
     private final String TAG = "MessageSender";
 
+    public static final String PREFERENCE_KEY_SEND_ENABLE = "MESSAGE_SEND_ENABLE";
+    public static final String PREFERENCE_KEY_SEND_TARGET = "MESSAGE_SEND_TARGET";
+
     /**
      * 메시지 전송
      * @param target        전송 대상
