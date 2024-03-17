@@ -1,6 +1,4 @@
 # CurbCrime
-
-## Application
 [![GitHub Version](https://img.shields.io/github/v/release/RoseNo7/CurbCrime-Android?include_prereleases&logo=github&label=GitHub)](https://github.com/RoseNo7/CurbCrime-Android/releases)
 
 ![Preview](/docs/preview.jpg)
